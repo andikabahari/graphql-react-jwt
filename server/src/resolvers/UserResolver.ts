@@ -1,6 +1,7 @@
 import { User } from "../entity/User";
 import {
   Arg,
+  Ctx,
   Field,
   Mutation,
   ObjectType,
@@ -9,6 +10,7 @@ import {
 } from "type-graphql";
 import { compare, hash } from "bcryptjs";
 import { sign } from "jsonwebtoken";
+import { MyContext } from "../MyContext";
 
 @ObjectType()
 class LoginResponse {
@@ -51,7 +53,8 @@ export class UserResolver {
   @Mutation(() => LoginResponse)
   async login(
     @Arg("email") email: string,
-    @Arg("password") password: string
+    @Arg("password") password: string,
+    @Ctx() { res }: MyContext
   ): Promise<LoginResponse> {
     const user = await User.findOne({ where: { email } });
     if (!user) {
@@ -65,9 +68,11 @@ export class UserResolver {
 
     const userId = { userId: user.id };
     const secret = "mylittlesecret";
-    const expiresIn = { expiresIn: "30m" };
-    return {
-      accessToken: sign(userId, secret, expiresIn),
-    };
+    const expiresIn = { expiresIn: "3d" };
+    const accessToken = sign(userId, secret, expiresIn);
+    const httpOnly = { httpOnly: true };
+    res.cookie("jid", accessToken, httpOnly);
+
+    return { accessToken };
   }
 }
