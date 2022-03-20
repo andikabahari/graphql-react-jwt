@@ -1,9 +1,33 @@
 import "reflect-metadata";
 import express from "express";
+import { ApolloServer } from "apollo-server-express";
 
 const main = async () => {
   const app = express();
   const port = 5000;
+
+  const apolloServer = new ApolloServer({
+    typeDefs: `
+        type Query {
+            hello: String!
+        }
+      `,
+    resolvers: {
+      Query: {
+        hello: () => "Hello, world!",
+      },
+    },
+  });
+
+  await apolloServer.start();
+
+  apolloServer.applyMiddleware({
+    app,
+    cors: {
+      origin: "https://studio.apollographql.com",
+      credentials: true,
+    },
+  });
 
   app.get("/", (_, res) => res.send("It works!"));
 
