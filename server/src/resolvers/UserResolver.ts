@@ -9,8 +9,8 @@ import {
   Resolver,
 } from "type-graphql";
 import { compare, hash } from "bcryptjs";
-import { sign } from "jsonwebtoken";
 import { MyContext } from "../MyContext";
+import { createAccessToken, createRefreshToken } from "../auth";
 
 @ObjectType()
 class LoginResponse {
@@ -66,13 +66,12 @@ export class UserResolver {
       throw new Error("Password is incorrect");
     }
 
-    const userId = { userId: user.id };
-    const secret = "mylittlesecret";
-    const expiresIn = { expiresIn: "3d" };
-    const accessToken = sign(userId, secret, expiresIn);
-    const httpOnly = { httpOnly: true };
-    res.cookie("jid", accessToken, httpOnly);
+    res.cookie("jid", createRefreshToken(user), {
+      httpOnly: true,
+    });
 
-    return { accessToken };
+    return {
+      accessToken: createAccessToken(user),
+    };
   }
 }
