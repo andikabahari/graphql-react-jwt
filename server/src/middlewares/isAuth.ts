@@ -3,7 +3,7 @@ import { MiddlewareFn } from "type-graphql";
 import { verify } from "jsonwebtoken";
 
 export const isAuth: MiddlewareFn<MyContext> = ({ context }, next) => {
-  const authHeader = context.req.headers["x-auth-token"] as string;
+  const authHeader = (context.req.headers["x-auth-token"] as string) || "";
   if (!authHeader.match(/bearer .+/)) {
     throw new Error("Token undefined");
   }
