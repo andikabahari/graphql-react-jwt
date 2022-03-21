@@ -10,7 +10,7 @@ const Register: React.FC = () => {
 
   return (
     <div>
-      Register page
+      <h3>Register page</h3>
       <form
         onSubmit={async (e) => {
           e.preventDefault();
