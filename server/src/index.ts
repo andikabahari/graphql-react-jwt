@@ -13,12 +13,20 @@ import {
   createRefreshToken,
   sendRefreshToken,
 } from "./auth";
+import cors from "cors";
 
 const main = async () => {
   await createConnection();
 
   const app = express();
   const port = 5000;
+
+  app.use(
+    cors({
+      origin: ["http://localhost:3000", "https://studio.apollographql.com"],
+      credentials: true,
+    })
+  );
 
   app.use(cookieParser());
 
@@ -64,13 +72,7 @@ const main = async () => {
 
   await apolloServer.start();
 
-  apolloServer.applyMiddleware({
-    app,
-    cors: {
-      origin: "https://studio.apollographql.com",
-      credentials: true,
-    },
-  });
+  apolloServer.applyMiddleware({ app });
 
   app.listen(port, () => console.log(`Server running on port ${port}`));
 };
