@@ -19,7 +19,6 @@ const main = async () => {
   await createConnection();
 
   const app = express();
-  const port = 5000;
 
   app.use(
     cors({
@@ -72,9 +71,11 @@ const main = async () => {
 
   await apolloServer.start();
 
-  apolloServer.applyMiddleware({ app });
+  apolloServer.applyMiddleware({ app, cors: false });
 
-  app.listen(port, () => console.log(`Server running on port ${port}`));
+  app.listen(process.env.APP_PORT, () => {
+    console.log(`Server running on port ${process.env.APP_PORT}`);
+  });
 };
 
 main();
