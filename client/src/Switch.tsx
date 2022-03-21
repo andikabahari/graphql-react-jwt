@@ -11,6 +11,9 @@ const Switch: React.FC = () => {
       <div>
         <header>
           <div>
+            <Link to="/">Home</Link>
+          </div>
+          <div>
             <Link to="/register">Register</Link>
           </div>
           <div>
