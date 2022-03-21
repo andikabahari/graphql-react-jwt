@@ -32,10 +32,7 @@ const main = async () => {
 
     let payload;
     try {
-      payload = verify(
-        token,
-        process.env.REFRESH_TOKEN_EXPIRATION_TIME!
-      ) as any;
+      payload = verify(token, process.env.REFRESH_TOKEN_SECRET!) as any;
     } catch (err) {
       console.log(err);
       return res.send({ ok: false, accessToken: "" });
@@ -43,6 +40,10 @@ const main = async () => {
 
     const user = await User.findOne({ id: payload.userId });
     if (!user) {
+      return res.send({ ok: false, accessToken: "" });
+    }
+
+    if (user.tokenVersion !== payload.tokenVersion) {
       return res.send({ ok: false, accessToken: "" });
     }
 
