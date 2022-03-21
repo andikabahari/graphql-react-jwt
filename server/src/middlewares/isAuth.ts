@@ -4,7 +4,7 @@ import { verify } from "jsonwebtoken";
 
 export const isAuth: MiddlewareFn<MyContext> = ({ context }, next) => {
   const authHeader = (context.req.headers["x-auth-token"] as string) || "";
-  if (!authHeader.match(/bearer .+/)) {
+  if (!authHeader.match(/bearer .+/i)) {
     throw new Error("Token undefined");
   }
 
