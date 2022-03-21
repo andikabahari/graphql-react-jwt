@@ -11,7 +11,11 @@ import {
 } from "type-graphql";
 import { compare, hash } from "bcryptjs";
 import { MyContext } from "../MyContext";
-import { createAccessToken, createRefreshToken } from "../auth";
+import {
+  createAccessToken,
+  createRefreshToken,
+  sendRefreshToken,
+} from "../auth";
 import { isAuth } from "../middlewares/isAuth";
 
 @ObjectType()
@@ -43,9 +47,9 @@ export class UserResolver {
     @Arg("email") email: string,
     @Arg("password") password: string
   ) {
-    const salt = 12;
-    const hashedPassword = await hash(password, salt);
     try {
+      const salt = 12;
+      const hashedPassword = await hash(password, salt);
       await User.insert({
         email,
         password: hashedPassword,
@@ -74,9 +78,7 @@ export class UserResolver {
       throw new Error("Password is incorrect");
     }
 
-    res.cookie("jid", createRefreshToken(user), {
-      httpOnly: true,
-    });
+    sendRefreshToken(res, createRefreshToken(user));
 
     return {
       accessToken: createAccessToken(user),
