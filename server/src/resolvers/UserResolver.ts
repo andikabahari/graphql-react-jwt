@@ -10,7 +10,7 @@ import {
   Resolver,
 } from "type-graphql";
 import { compare, hash } from "bcryptjs";
-import { MyContext } from "../MyContext";
+import { MyContext } from "../types/MyContext";
 import {
   createAccessToken,
   createRefreshToken,

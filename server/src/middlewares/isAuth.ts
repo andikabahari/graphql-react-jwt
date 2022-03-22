@@ -1,4 +1,4 @@
-import { MyContext } from "../MyContext";
+import { MyContext } from "../types/MyContext";
 import { MiddlewareFn } from "type-graphql";
 import { verify } from "jsonwebtoken";
 
