@@ -47,7 +47,7 @@ export type MutationRevokeRefreshTokensForUserArgs = {
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
-  me: Scalars['String'];
+  me?: Maybe<User>;
   users: Array<User>;
 };
 
@@ -81,7 +81,7 @@ export type HelloQuery = { __typename?: 'Query', hello: string };
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: string };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, email: string } | null };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -189,7 +189,10 @@ export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>;
 export type HelloQueryResult = Apollo.QueryResult<HelloQuery, HelloQueryVariables>;
 export const MeDocument = gql`
     query Me {
-  me
+  me {
+    id
+    email
+  }
 }
     `;
 

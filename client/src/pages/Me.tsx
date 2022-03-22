@@ -19,7 +19,7 @@ const Me: React.FC = () => {
   return (
     <div>
       <h3>Me page</h3>
-      <div>{data?.me}</div>
+      <div>{data?.me?.email}</div>
     </div>
   );
 };

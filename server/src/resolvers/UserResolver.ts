@@ -8,7 +8,6 @@ import {
   ObjectType,
   Query,
   Resolver,
-  UseMiddleware,
 } from "type-graphql";
 import { compare, hash } from "bcryptjs";
 import { MyContext } from "../MyContext";
@@ -17,8 +16,8 @@ import {
   createRefreshToken,
   sendRefreshToken,
 } from "../auth";
-import { isAuth } from "../middlewares/isAuth";
 import { getConnection } from "typeorm";
+import { verify } from "jsonwebtoken";
 
 @ObjectType()
 class LoginResponse {
@@ -33,10 +32,21 @@ export class UserResolver {
     return "Hi!";
   }
 
-  @Query(() => String)
-  @UseMiddleware(isAuth)
-  me(@Ctx() { payload }: MyContext) {
-    return `Your userId: ${payload?.userId}`;
+  @Query(() => User, { nullable: true })
+  me(@Ctx() context: MyContext) {
+    const authHeader = (context.req.headers["x-auth-token"] as string) || "";
+    if (!authHeader.match(/bearer .+/i)) {
+      return null;
+    }
+
+    try {
+      const token = authHeader.split(" ")[1];
+      const payload = verify(token, process.env.ACCESS_TOKEN_SECRET!) as any;
+      return User.findOne(payload.userId);
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
   }
 
   @Query(() => [User])
