@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useMeQuery } from "../generated/graphql";
 
 const Navbar: React.FC = () => {
-  const { data } = useMeQuery({ fetchPolicy: "network-only" });
+  const { data } = useMeQuery();
 
   return (
     <header>
