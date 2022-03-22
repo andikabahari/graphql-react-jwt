@@ -5,6 +5,7 @@ import Switch from "./Switch";
 
 const client = new ApolloClient({
   uri: "http://localhost:5000/graphql",
+  credentials: "include",
 }) as any;
 
 const App: React.FC = () => {
