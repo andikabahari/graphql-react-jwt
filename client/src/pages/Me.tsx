@@ -16,7 +16,12 @@ const Me: React.FC = () => {
     return <div>No data</div>;
   }
 
-  return <div>{data?.me}</div>;
+  return (
+    <div>
+      <h3>Me page</h3>
+      <div>{data?.me}</div>
+    </div>
+  );
 };
 
 export default Me;
