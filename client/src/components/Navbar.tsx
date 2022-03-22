@@ -1,9 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useMeQuery } from "../generated/graphql";
+import { setAccessToken } from "../accessToken";
+import { useLogoutMutation, useMeQuery } from "../generated/graphql";
 
 const Navbar: React.FC = () => {
   const { data } = useMeQuery();
+  const [logout, { client }] = useLogoutMutation();
 
   return (
     <header>
@@ -16,7 +18,15 @@ const Navbar: React.FC = () => {
             <Link to="/me">Me</Link>
           </div>
           <div>
-            <Link to="/logout">Logout</Link>
+            <button
+              onClick={async () => {
+                await logout();
+                setAccessToken("");
+                await client.resetStore();
+              }}
+            >
+              Logout
+            </button>
           </div>
         </>
       ) : (
